@@ -1,0 +1,2 @@
+cp *.html /var/www/html 2>>/dev/null
+cp *.php /var/www/html 2>>/dev/null
