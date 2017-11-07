@@ -1,4 +1,5 @@
 <?php
+include 'db.php';
 session_start();
 $valid = array("macklin","admin", "guest","lampcougars","ligers","cyberlinux", "cybercrypts","mortalwombat","team6","team7", "test"); //array of valid user names
 $userId = strtolower($_POST['userId']); //ensures that username is not case sensitive
