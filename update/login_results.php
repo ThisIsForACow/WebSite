@@ -1,6 +1,6 @@
 <?php
 session_start();
-$valid = array("macklin","admin", "guest","LAMPCougars","Ligers","CyberLinux", "CyberCrypts","MortalWombat","team6","team7", "test"); //array of valid user names
+$valid = array("macklin","admin", "guest","lampcougars","ligers","cyberlinux", "cybercrypts","mortalwombat","team6","team7", "test"); //array of valid user names
 $userId = $_POST['userId'];
 $password = $_POST['pswrd'];
 if (strlen($password) > 8 || strlen($userId) > 25)
@@ -10,36 +10,42 @@ if (strlen($password) > 8 || strlen($userId) > 25)
 }
 $key = array_search($userId,$valid); //returns a key referencing location of valid input in array
 $found = $valid[$key]; // stores the valid username
-$mysqli = new mysqli("localhost", "team05", "passwordTEAM05mysql!", "team05") or die('Could not connect to the server!' . mysqli_error());
-$result = $mysqli->query("SELECT password, secretmessage FROM accounts WHERE user='$found'") or die ('A error occurred:' . mysqli_error());
+$mysqli = new PDO("mysql:dbname=team05;host=localhost", "team05", "passwordTEAM05mysql!") or die('Could not connect to the server!' . mysqli_error());
+
+$mysqli -> setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+$mysqli -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+$stmt = $mysqli->prepare("SELECT password, secretmessage FROM accounts WHERE user= :name");
+$stmt->bindParam(':name', $found, PDO::PARAM_STR); //binds statement
+$stmt->execute(); //executes prepared statement
 
 
-if($result->num_rows == 0 || $result->num_rows > 1)
+if($stmt -> rowCount() == 0 || $stmt -> rowCount() > 1)
 {
     header("location: login.php");
 }
 else
 {
-    while($row = $result->fetch_assoc()) {
+    foreach($stmt as $row) {
         if($row["password"] != $password)
         {
           $counter = $_SESSION['loginAttempt'];
           $counter++;
           $_SESSION['loginAttempt'] = $counter;
-            $mysqli->query("UPDATE accounts SET unsuccessfulLogin = (unsuccessfulLogin + 1)  WHERE user = '$userId'");
-            $_SESSION['errormessage'] = "PASSWORD IS INCORRECT";
+            $mysqli->query("UPDATE accounts SET unsuccessfulLogin = (unsuccessfulLogin + 1)  WHERE user = '$userId'"); //incrememts unsuccessful login
+            $_SESSION['errormessage'] = "PASSWORD OR USERNAME IS INCORRECT";
             header("location: login.php");
         }
         else
         {
-           $mysqli->query("UPDATE accounts SET successfulLogin = (successfulLogin + 1) WHERE user = '$userId'");
+           $mysqli->query("UPDATE accounts SET successfulLogin = (successfulLogin + 1) WHERE user = '$userId'"); //incrememts successful login
            $_SESSION['loginAttempt'] = 0; //resets loginAttempts
            $_SESSION['authenticated'] = 1; // set authentication flag to 1
            $_SESSION['secretMessage'] = $row['secretmessage'];
         }
     }
 }
-if ($_SESSION['authenticated'] != 1)
+if ($_SESSION['authenticated'] != 1) //prevent someone from skipping over loginpage
 {
         header("location: login.php");
 }
@@ -84,7 +90,7 @@ if ($_SESSION['authenticated'] != 1)
            </tr>
            <?php
            $data = $GLOBALS['mysqli']->query("SELECT * FROM accounts") or die ('A error occurred: ' . mysqli_error());
-           while($row = $data->fetch_assoc()){
+           foreach( $data as $row){
              echo "<tr>";
              echo "<td>";
              echo $row["user"];
@@ -105,7 +111,6 @@ if ($_SESSION['authenticated'] != 1)
            ?>
        </table>
    </div>
-
     <!--================================================================= -->
     </div>
 </center>
