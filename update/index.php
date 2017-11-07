@@ -1,4 +1,9 @@
 <link rel="stylesheet" href="css/common.css">
+<?php
+session_start();
+session_unset();
+session_destroy();
+?>
 <html>
 <!-- ==================Start Header============================ -->
 <title>Home</title>
