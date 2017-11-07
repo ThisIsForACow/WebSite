@@ -15,9 +15,6 @@ session_destroy();
     <form action="login.php">
         <button style="width:35%">Play</button>
     </form>
-    <form action="listofusers.php">
-        <button style="width:35%">List Of Users</button>
-    </form>
 </center>
 <footer> Mortalwombat Team</footer>
 </html>

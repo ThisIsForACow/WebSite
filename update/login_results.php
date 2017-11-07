@@ -3,6 +3,11 @@ session_start();
 $valid = array("macklin","admin", "guest","LAMPCougars","Ligers","CyberLinux", "CyberCrypts","MortalWombat","team6","team7", "test"); //array of valid user names
 $userId = $_POST['userId'];
 $password = $_POST['pswrd'];
+if (strlen($password) > 8 || strlen($userId) > 25)
+{
+        $_SESSION['errormessage'] = "incorrect password or username";
+        header("location: login.php");
+}
 $key = array_search($userId,$valid); //returns a key referencing location of valid input in array
 $found = $valid[$key]; // stores the valid username
 $mysqli = new mysqli("localhost", "team05", "passwordTEAM05mysql!", "team05") or die('Could not connect to the server!' . mysqli_error());
@@ -56,9 +61,6 @@ if ($_SESSION['authenticated'] != 1)
 <body>
 <center>
     <div class="btn-group" style="width:100%">
-        <form action="login.php">
-            <button style="width:35%">Play</button>
-        </form>
         <form action="index.php">
             <button style="width:35%">Home</button>
         </form>
