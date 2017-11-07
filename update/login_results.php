@@ -1,7 +1,7 @@
 <?php
 session_start();
 $valid = array("macklin","admin", "guest","lampcougars","ligers","cyberlinux", "cybercrypts","mortalwombat","team6","team7", "test"); //array of valid user names
-$userId = $_POST['userId'];
+$userId = strtolower($_POST['userId']);
 $password = $_POST['pswrd'];
 if (strlen($password) > 8 || strlen($userId) > 25)
 {
@@ -19,7 +19,6 @@ $stmt = $mysqli->prepare("SELECT password, secretmessage FROM accounts WHERE use
 $stmt->bindParam(':name', $found, PDO::PARAM_STR); //binds statement
 $stmt->execute(); //executes prepared statement
 
-
 if($stmt -> rowCount() == 0 || $stmt -> rowCount() > 1)
 {
     header("location: login.php");
@@ -32,13 +31,17 @@ else
           $counter = $_SESSION['loginAttempt'];
           $counter++;
           $_SESSION['loginAttempt'] = $counter;
-            $mysqli->query("UPDATE accounts SET unsuccessfulLogin = (unsuccessfulLogin + 1)  WHERE user = '$userId'"); //incrememts unsuccessful login
-            $_SESSION['errormessage'] = "PASSWORD OR USERNAME IS INCORRECT";
-            header("location: login.php");
+           $state  = $mysqli->prepare("UPDATE accounts SET unsuccessfulLogin = (unsuccessfulLogin + 1)  WHERE user = :name"); //incrememts unsuccessful login
+           $state -> bindParam(':name', $found, PDO::PARAM_STR);
+           $state -> execute();
+           $_SESSION['errormessage'] = "PASSWORD OR USERNAME IS INCORRECT";
+           header("location: login.php");
         }
         else
         {
-           $mysqli->query("UPDATE accounts SET successfulLogin = (successfulLogin + 1) WHERE user = '$userId'"); //incrememts successful login
+           $state = $mysqli->prepare("UPDATE accounts SET successfulLogin = (successfulLogin + 1) WHERE user = :name"); //incrememts successful login
+           $state -> bindParam(':name', $found, PDO::PARAM_STR);
+           $state -> execute();
            $_SESSION['loginAttempt'] = 0; //resets loginAttempts
            $_SESSION['authenticated'] = 1; // set authentication flag to 1
            $_SESSION['secretMessage'] = $row['secretmessage'];
@@ -50,6 +53,7 @@ if ($_SESSION['authenticated'] != 1) //prevent someone from skipping over loginp
         header("location: login.php");
 }
 ?>
+
 
 <link rel="stylesheet" href="css/common.css">
 <link rel="stylesheet" href="css/listofusers.css">
