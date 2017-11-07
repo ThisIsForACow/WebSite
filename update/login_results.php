@@ -10,7 +10,7 @@ if (strlen($password) > 9 || strlen($userId) > 25) //validates length of input f
 }
 $key = array_search($userId,$valid); //returns a key referencing location of valid input in array
 $found = $valid[$key]; // stores the valid username
-$mysqli = new PDO("mysql:dbname=team05;host=localhost", "team05", "passwordTEAM05mysql!") or die('Could not connect to the server!' . mysqli_error());
+$mysqli = new PDO($dns, $uName, $uPass) or die('Could not connect to the server!' . mysqli_error());
 
 //neccessary setup for PDO parameterized statements
 $mysqli -> setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
