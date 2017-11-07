@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<style>
+header{
+   text-align: center;
+   background: black;color:white;
+    
+}
+footer{
+	position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: red;
+    color: white;
+    text-align: center
+}
+div.format1 {
+    margin-left: auto;
+	margin-right:auto;
+    width: 700px;
+    height: 100px;
+}
+</style>
+<html>
+<meta charset="UTF-8">
+<title>Waiting</title>
+<header>
+<h1>Forgot Your Password?</h1>
+</header>
+<center>
+<body>
+
+<p>Please answer this question:</p>
+
+<input id="answer" type="number" min="200" max="300" required>
+<button onclick="setTimeout(myFunction, 18000)">OK</button>
+
+<p>Enter a interget number between 200 and 300.</p>
+
+<p id="mortalwombat"></p>
+
+<p>You need to answer the question correctly and wait for 3 mins since you have entered wrong user Id and password 5 times!!!!!!</p>
+
+<script>
+function myFunction() {
+    var inpObj = document.getElementById("answer");
+    if (inpObj.checkValidity() == false) {
+          document.getElementById("mortalwombat").innerHTML = inpObj.validationMessage;
+		  window.location="Trap.html"
+    } else {
+          document.getElementById("mortalwombat").innerHTML = "Input Correct";
+		  window.location="LogIn.html"
+    } 
+} 
+</script>
+</center>
+<footer> Mortalwombat Team</footer>
+</body>
+</html>
