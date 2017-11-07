@@ -3,7 +3,7 @@ session_start();
 $valid = array("macklin","admin", "guest","lampcougars","ligers","cyberlinux", "cybercrypts","mortalwombat","team6","team7", "test"); //array of valid user names
 $userId = strtolower($_POST['userId']);
 $password = $_POST['pswrd'];
-if (strlen($password) > 8 || strlen($userId) > 25)
+if (strlen($password) > 9 || strlen($userId) > 25)
 {
         $_SESSION['errormessage'] = "incorrect password or username";
         header("location: login.php");
